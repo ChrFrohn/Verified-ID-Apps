@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 const { ConfidentialClientApplication } = require('@azure/msal-node');
 require('dotenv').config();
@@ -159,13 +160,22 @@ async function createVerificationRequest(options = {}) {
     }
 }
 
+// Rate limiting
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' }
+});
+
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
-app.post('/api/verify-credential', async (req, res) => {
+app.post('/api/verify-credential', apiLimiter, async (req, res) => {
     try {
         const { includeFaceCheck = false } = req.body;
         
