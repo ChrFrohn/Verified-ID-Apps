@@ -168,6 +168,7 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later.' }
 });
+app.use(apiLimiter);
 
 app.use(express.static('public'));
 
@@ -175,7 +176,7 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
-app.post('/api/verify-credential', apiLimiter, async (req, res) => {
+app.post('/api/verify-credential', async (req, res) => {
     try {
         const { includeFaceCheck = false } = req.body;
         

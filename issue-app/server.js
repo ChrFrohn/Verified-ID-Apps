@@ -351,6 +351,7 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later.' }
 });
+app.use(apiLimiter);
 
 // Serve static files
 app.use(express.static('public'));
@@ -361,7 +362,7 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
-app.get('/api/user', apiLimiter, requireEasyAuth, async (req, res) => {
+app.get('/api/user', requireEasyAuth, async (req, res) => {
     try {
         const easyAuthUser = req.easyAuthUser;
         
@@ -393,7 +394,7 @@ app.get('/api/user', apiLimiter, requireEasyAuth, async (req, res) => {
     }
 });
 
-app.post('/api/issue-credential', apiLimiter, requireEasyAuth, async (req, res) => {
+app.post('/api/issue-credential', requireEasyAuth, async (req, res) => {
     try {
         const user = req.easyAuthUser;
         
@@ -473,7 +474,7 @@ app.get('/api/request-status/:requestId', (req, res) => {
 });
 
 // Callback endpoint for Microsoft Request API
-app.post('/api/request-callback', apiLimiter, (req, res) => {
+app.post('/api/request-callback', (req, res) => {
     const requestId = req.body.state;
     const code = req.body.code;
     
