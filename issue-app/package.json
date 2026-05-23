@@ -12,9 +12,9 @@
     "@azure/msal-node": "^2.16.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "axios": "^1.14.0",
-    "body-parser": "^1.20.4",
+    "body-parser": "^1.20.5",
     "dotenv": "^16.4.5",
-    "express": "^4.22.1",
+    "express": "^4.22.2",
     "express-rate-limit": "^8.3.2",
     "uuid": "^9.0.1"
   },
